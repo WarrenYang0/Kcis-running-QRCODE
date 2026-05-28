@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>站點 2 — 青銀路跑</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #f5f5f0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+    }
+    .card {
+      background: white;
+      border-radius: 16px;
+      padding: 2rem 1.75rem;
+      max-width: 480px;
+      width: 100%;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    }
+    .badge {
+      display: inline-block;
+      background: #E1F5EE;
+      color: #085041;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 4px 12px;
+      border-radius: 20px;
+      margin-bottom: 1rem;
+    }
+    h1 {
+      font-size: 18px;
+      font-weight: 600;
+      color: #1a1a1a;
+      line-height: 1.5;
+      margin-bottom: 1.5rem;
+    }
+    .option-btn {
+      width: 100%;
+      text-align: left;
+      padding: 13px 16px;
+      margin-bottom: 10px;
+      border: 1.5px solid #e0e0e0;
+      border-radius: 10px;
+      background: #fafafa;
+      cursor: pointer;
+      font-size: 15px;
+      font-family: inherit;
+      color: #1a1a1a;
+      transition: all 0.15s;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .option-btn:hover { background: #f0f0f0; }
+    .option-btn.correct {
+      background: #E1F5EE;
+      border-color: #1D9E75;
+      color: #085041;
+    }
+    .option-btn.wrong {
+      background: #FCEBEB;
+      border-color: #E24B4A;
+      color: #501313;
+    }
+    .option-btn.disabled { pointer-events: none; }
+    .circle {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      border: 1.5px solid #ccc;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 600;
+      flex-shrink: 0;
+      color: #888;
+    }
+    .option-btn.correct .circle {
+      background: #1D9E75;
+      border-color: #1D9E75;
+      color: white;
+    }
+    .option-btn.wrong .circle {
+      background: #E24B4A;
+      border-color: #E24B4A;
+      color: white;
+    }
+    .feedback {
+      display: none;
+      padding: 13px 16px;
+      border-radius: 10px;
+      font-size: 14px;
+      line-height: 1.6;
+      margin-top: 0.5rem;
+      margin-bottom: 1rem;
+    }
+    .feedback.correct { background: #E1F5EE; color: #085041; }
+    .feedback.wrong { background: #FCEBEB; color: #501313; }
+    .feedback.show { display: block; }
+    .next-btn {
+      width: 100%;
+      padding: 14px;
+      background: #1D9E75;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      display: none;
+      transition: opacity 0.2s;
+    }
+    .next-btn:hover { opacity: 0.88; }
+    .next-btn.show { display: block; }
+    .success {
+      display: none;
+      text-align: center;
+      padding: 1rem 0;
+    }
+    .success-icon { font-size: 48px; margin-bottom: 1rem; }
+    .success h2 {
+      font-size: 20px;
+      font-weight: 600;
+      color: #1a1a1a;
+      margin-bottom: 0.5rem;
+    }
+    .success p { font-size: 14px; color: #777; line-height: 1.6; }
+    label {
+      display: block;
+      font-size: 13px;
+      font-weight: 500;
+      color: #555;
+      margin-bottom: 6px;
+    }
+    input {
+      width: 100%;
+      border: 1.5px solid #e0e0e0;
+      border-radius: 10px;
+      padding: 12px 14px;
+      font-size: 15px;
+      font-family: inherit;
+      color: #1a1a1a;
+      background: #fafafa;
+      transition: border-color 0.2s;
+      margin-bottom: 1.25rem;
+    }
+    input:focus { outline: none; border-color: #1D9E75; background: white; }
+    .error-msg {
+      font-size: 13px;
+      color: #c0392b;
+      margin-bottom: 1rem;
+      display: none;
+    }
+    .start-btn {
+      width: 100%;
+      padding: 14px;
+      background: #1D9E75;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+    .start-btn:hover { opacity: 0.88; }
+    .start-btn:disabled { opacity: 0.4; cursor: default; }
+  </style>
+</head>
+<body>
+  <div class="card">
+
+    <div id="name-view">
+      <span class="badge">站點 2 — 知識問答</span>
+      <h1 style="margin-bottom:1.5rem">先輸入你的姓名再開始！</h1>
+      <label for="name">你的姓名</label>
+      <input type="text" id="name" placeholder="輸入報名姓名" maxlength="30">
+      <div class="error-msg" id="error-msg">請填寫姓名。</div>
+      <button class="start-btn" id="start-btn" disabled>開始作答</button>
+    </div>
+
+    <div id="quiz-view" style="display:none">
+      <span class="badge">站點 2 — 知識問答</span>
+      <h1>在台灣，多數老人入住長照機構的最主要原因是什麼？</h1>
+      <div id="options-wrap">
+        <button class="option-btn" onclick="select(0)"><span class="circle">A</span>家人不孝，不想照顧</button>
+        <button class="option-btn" onclick="select(1)"><span class="circle">B</span>老人自己想過更自由的生活</button>
+        <button class="option-btn" onclick="select(2)"><span class="circle">C</span>老人的照護需求已超出家庭能力</button>
+        <button class="option-btn" onclick="select(3)"><span class="circle">D</span>政府鼓勵老人住進機構</button>
+      </div>
+      <div class="feedback" id="feedback"></div>
+      <button class="next-btn" id="next-btn">完成 ✓</button>
+    </div>
+
+    <div class="success" id="success-view">
+      <div class="success-icon">💪</div>
+      <h2>答得好！繼續加油！</h2>
+      <p>前往下一個站點，<br>完成更多挑戰！</p>
+    </div>
+
+  </div>
+
+  <script>
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyhsz_9aVzOHkD2UxDShpEamyAY5PGDmx-NCDTr9l-5dF43FKtFcobzJ66b0yT9CC8e/exec";
+    const CORRECT = 2; // C 是正確答案（index 從 0 開始）
+    let answered = false;
+    let playerName = "";
+
+    const nameInput = document.getElementById("name");
+    const startBtn = document.getElementById("start-btn");
+
+    nameInput.addEventListener("input", function() {
+      startBtn.disabled = this.value.trim().length === 0;
+    });
+
+    document.getElementById("start-btn").addEventListener("click", function() {
+      playerName = nameInput.value.trim();
+      if (!playerName) {
+        document.getElementById("error-msg").style.display = "block";
+        return;
+      }
+      document.getElementById("name-view").style.display = "none";
+      document.getElementById("quiz-view").style.display = "block";
+    });
+
+    function select(idx) {
+      if (answered) return;
+      answered = true;
+
+      const btns = document.querySelectorAll(".option-btn");
+      btns.forEach((b, i) => {
+        b.classList.add("disabled");
+        if (i === CORRECT) b.classList.add("correct");
+        else if (i === idx) b.classList.add("wrong");
+      });
+
+      const fb = document.getElementById("feedback");
+      const isCorrect = idx === CORRECT;
+
+      if (isCorrect) {
+        fb.className = "feedback correct show";
+        fb.innerHTML = "✓ 答對了！大多數老人入住長照機構，是因為身體退化、失能或失智，照護需求已超出家人的體力與時間負荷。";
+      } else {
+        fb.className = "feedback wrong show";
+        fb.innerHTML = "✗ 正確答案是 C。大多數老人入住長照機構，是因為身體退化、失能或失智，照護需求已超出家人的體力與時間負荷。";
+      }
+
+      document.getElementById("next-btn").className = "next-btn show";
+
+      // 送資料到 Google Sheets
+      fetch(SCRIPT_URL, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          station: "站點2",
+          name: playerName,
+          answer: isCorrect ? "答對：C" : "答錯，選了 " + ["A","B","C","D"][idx]
+        })
+      });
+    }
+
+    document.getElementById("next-btn").addEventListener("click", function() {
+      document.getElementById("quiz-view").style.display = "none";
+      document.getElementById("success-view").style.display = "block";
+    });
+  </script>
+</body>
+</html>
