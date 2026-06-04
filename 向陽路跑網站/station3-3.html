@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>站點 3 — 向陽路跑</title>
+  <title>站點 3-3 — 向陽路跑</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
@@ -25,8 +25,8 @@
     }
     .badge {
       display: inline-block;
-      background: #E1F5EE;
-      color: #085041;
+      background: #FFF0E6;
+      color: #7A3000;
       font-size: 12px;
       font-weight: 600;
       padding: 4px 12px;
@@ -34,7 +34,7 @@
       margin-bottom: 1rem;
     }
     h1 {
-      font-size: 20px;
+      font-size: 19px;
       font-weight: 600;
       color: #1a1a1a;
       line-height: 1.5;
@@ -61,7 +61,7 @@
     }
     input:focus, textarea:focus {
       outline: none;
-      border-color: #1D9E75;
+      border-color: #E07A2F;
       background: white;
     }
     textarea {
@@ -79,7 +79,7 @@
     button {
       width: 100%;
       padding: 14px;
-      background: #1D9E75;
+      background: #E07A2F;
       color: white;
       border: none;
       border-radius: 10px;
@@ -109,8 +109,8 @@
   <div class="card">
 
     <div id="form-view">
-      <span class="badge">站點 3 — 分享時刻</span>
-      <h1>怎麼讓自己與爺爺奶奶之間更有話題、更親近？</h1>
+      <span class="badge">站點 3-3 — 分享時刻</span>
+      <h1>形容自己爺爺奶奶的性格，如果你是他們的孩子會怎麼去跟他們相處？</h1>
 
       <label for="name">你的姓名</label>
       <input type="text" id="name" placeholder="輸入報名姓名" maxlength="30">
@@ -162,7 +162,7 @@
           mode: "no-cors",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            station: "站點3",
+            station: "站點3-3",
             name: name,
             answer: answer
           })

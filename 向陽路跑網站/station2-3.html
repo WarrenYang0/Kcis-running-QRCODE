@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>站點 2-3 — 向陽路跑</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #f5f5f0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+    }
+    .card {
+      background: white;
+      border-radius: 16px;
+      padding: 2rem 1.75rem;
+      max-width: 480px;
+      width: 100%;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    }
+    .badge {
+      display: inline-block;
+      background: #E1F5EE;
+      color: #085041;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 4px 12px;
+      border-radius: 20px;
+      margin-bottom: 1rem;
+    }
+    h1 {
+      font-size: 20px;
+      font-weight: 600;
+      color: #1a1a1a;
+      line-height: 1.5;
+      margin-bottom: 2rem;
+    }
+    label {
+      display: block;
+      font-size: 13px;
+      font-weight: 500;
+      color: #555;
+      margin-bottom: 6px;
+    }
+    input, textarea {
+      width: 100%;
+      border: 1.5px solid #e0e0e0;
+      border-radius: 10px;
+      padding: 12px 14px;
+      font-size: 15px;
+      font-family: inherit;
+      color: #1a1a1a;
+      background: #fafafa;
+      transition: border-color 0.2s;
+      margin-bottom: 1.25rem;
+    }
+    input:focus, textarea:focus {
+      outline: none;
+      border-color: #1D9E75;
+      background: white;
+    }
+    textarea {
+      min-height: 140px;
+      resize: none;
+      line-height: 1.6;
+    }
+    .char-count {
+      font-size: 12px;
+      color: #aaa;
+      text-align: right;
+      margin-top: -1rem;
+      margin-bottom: 1.25rem;
+    }
+    button {
+      width: 100%;
+      padding: 14px;
+      background: #1D9E75;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+    button:hover { opacity: 0.88; }
+    button:disabled { opacity: 0.4; cursor: default; }
+    .success {
+      display: none;
+      text-align: center;
+      padding: 1rem 0;
+    }
+    .success-icon { font-size: 48px; margin-bottom: 1rem; }
+    .success h2 {
+      font-size: 20px;
+      font-weight: 600;
+      color: #1a1a1a;
+      margin-bottom: 0.5rem;
+    }
+    .success p { font-size: 14px; color: #777; line-height: 1.6; }
+  </style>
+</head>
+<body>
+  <div class="card">
+
+    <div id="form-view">
+      <span class="badge">站點 2-3 — 分享時刻</span>
+      <h1>你的爺爺奶奶的口頭禪是什麼？</h1>
+
+      <label for="name">你的姓名</label>
+      <input type="text" id="name" placeholder="輸入報名姓名" maxlength="30">
+
+      <label for="answer">你的回答</label>
+      <textarea id="answer" placeholder="在這裡寫下你的想法…" maxlength="500"></textarea>
+      <div class="char-count"><span id="char-now">0</span> / 500</div>
+
+      <button id="submit-btn" disabled>送出回答</button>
+    </div>
+
+    <div class="success" id="success-view">
+      <div class="success-icon">🎉</div>
+      <h2>謝謝你的分享！</h2>
+      <p>繼續加油，<br>前往下一個站點！</p>
+    </div>
+
+  </div>
+
+  <script>
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyhsz_9aVzOHkD2UxDShpEamyAY5PGDmx-NCDTr9l-5dF43FKtFcobzJ66b0yT9CC8e/exec";
+
+    const nameInput = document.getElementById("name");
+    const answerInput = document.getElementById("answer");
+    const submitBtn = document.getElementById("submit-btn");
+    const charNow = document.getElementById("char-now");
+
+    function checkReady() {
+      submitBtn.disabled = nameInput.value.trim().length === 0 || answerInput.value.trim().length === 0;
+    }
+
+    nameInput.addEventListener("input", checkReady);
+    answerInput.addEventListener("input", function() {
+      charNow.textContent = this.value.length;
+      checkReady();
+    });
+
+    submitBtn.addEventListener("click", async function() {
+      const name = nameInput.value.trim();
+      const answer = answerInput.value.trim();
+      if (!name || !answer) return;
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = "送出中…";
+
+      try {
+        await fetch(SCRIPT_URL, {
+          method: "POST",
+          mode: "no-cors",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            station: "站點2-3",
+            name: name,
+            answer: answer
+          })
+        });
+      } catch (err) {
+        console.error(err);
+      }
+
+      document.getElementById("form-view").style.display = "none";
+      document.getElementById("success-view").style.display = "block";
+    });
+  </script>
+</body>
+</html>
